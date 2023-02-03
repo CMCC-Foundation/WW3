@@ -65,13 +65,16 @@
 !/ Public variables
 !/
       !air kinematic viscosity (used in WAM)
-      INTEGER, PARAMETER      :: ITAUMAX=200,JUMAX=200
-      INTEGER, PARAMETER      :: IUSTAR=100,IALPHA=200, ILEVTAIL=50
+!      INTEGER, PARAMETER      :: ITAUMAX=200,JUMAX=200
+!      INTEGER, PARAMETER      :: IUSTAR=100,IALPHA=200, ILEVTAIL=50
+      INTEGER, PARAMETER      :: ITAUMAX=100,JUMAX=100
+      INTEGER, PARAMETER      :: IUSTAR=100,IALPHA=100, ILEVTAIL=50
       REAL                    :: TAUT(0:ITAUMAX,0:JUMAX), DELTAUW, DELU
       ! Table for H.F. stress as a function of 2 variables
       REAL                    :: TAUHFT(0:IUSTAR,0:IALPHA), DELUST, DELALP
       REAL,    PARAMETER      :: UMAX    = 50.
-      REAL,    PARAMETER      :: TAUWMAX = 2.2361 !SQRT(5.)
+!      REAL,    PARAMETER      :: TAUWMAX = 2.2361 !SQRT(5.)
+      REAL,    PARAMETER      :: TAUWMAX = 5
 !/
       CONTAINS
 !/ ------------------------------------------------------------------- /
@@ -464,15 +467,15 @@
 ! I got it from, maybe just made up from drag law ... 
 !
 #ifdef W3_STAB3
-      Usigma=MAX(0.,-0.025*AS)
-      USTARsigma=(1.0+U/(10.+U))*Usigma
+      !Usigma=MAX(0.,-0.025*AS)
+      !USTARsigma=(1.0+U/(10.+U))*Usigma
 #endif
       UST=USTAR
       ISTAB=3
 #ifdef W3_STAB3
-      DO ISTAB=1,2
-      IF (ISTAB.EQ.1) UST=USTAR*(1.-USTARsigma)
-      IF (ISTAB.EQ.2) UST=USTAR*(1.+USTARsigma)
+      !DO ISTAB=1,2
+      !IF (ISTAB.EQ.1) UST=USTAR*(1.-USTARsigma)
+      !IF (ISTAB.EQ.2) UST=USTAR*(1.+USTARsigma)
 #endif
       TAUX = UST**2* COS(USDIR)
       TAUY = UST**2* SIN(USDIR)
@@ -549,12 +552,12 @@
         TAUWNY =STRESSSTABN(3,2)
 !             WRITE(995,'(A,11G14.5)') 'NEGSTRESS:    ',TAUWNX,TAUWNY,FW*UORB**3
 #ifdef W3_STAB3
-      END DO 
-      D(:)=0.5*(DSTAB(1,:)+DSTAB(2,:))
-      XSTRESS=0.5*(STRESSSTAB(1,1)+STRESSSTAB(2,1))
-      YSTRESS=0.5*(STRESSSTAB(1,2)+STRESSSTAB(2,2))
-      TAUWNX=0.5*(STRESSSTABN(1,1)+STRESSSTABN(2,1))
-      TAUWNY=0.5*(STRESSSTABN(1,2)+STRESSSTABN(2,2))
+      !END DO 
+      !D(:)=0.5*(DSTAB(1,:)+DSTAB(2,:))
+      !XSTRESS=0.5*(STRESSSTAB(1,1)+STRESSSTAB(2,1))
+      !YSTRESS=0.5*(STRESSSTAB(1,2)+STRESSSTAB(2,2))
+      !TAUWNX=0.5*(STRESSSTABN(1,1)+STRESSSTABN(2,1))
+      !TAUWNY=0.5*(STRESSSTABN(1,2)+STRESSSTABN(2,2))
 #endif
       S = D * A
 !
@@ -595,7 +598,7 @@
       IND  = MAX(1,MIN (IUSTAR-1, INT(XI)))
       DELI1= MAX(MIN (1. ,XI-FLOAT(IND)),0.)
       DELI2= 1. - DELI1
-      XJ=MAX(0.,(GRAV*Z0/MAX(UST,0.00001)**2-AALPHA) / DELALP)
+      XJ=MAX(0.,(GRAV*Z0/MAX(UST,0.00001)**2-AALPHA) / DELALP) ! AIMIE already MAX(UST,0.00001)
       J    = MAX(1 ,MIN (IALPHA-1, INT(XJ)))
       DELJ1= MAX(0.,MIN (1.      , XJ-FLOAT(J)))
       DELJ2=1. - DELJ1
@@ -818,8 +821,8 @@
                IF (ZZ0MAX.NE.0) ZZ00=MIN(ZZ00,ZZ0MAX)
                ! Corrects roughness ZZ00 for quasi-linear effect
                ZZ0 = ZZ00/(1.-X)**XM
-               !ZNU = 0.1*nu_air/UST  ! This was removed by Bidlot in 1996
-          !ZZ0 = MAX(ZNU,ZZ0)
+               ZNU = 0.1*nu_air/UST  ! This was removed by Bidlot in 1996
+               ZZ0 = MAX(ZNU,ZZ0)
                F   = UST-KAPPA*UTOP/(ALOG(ZZWND/ZZ0))
                DELF= 1.-KAPPA*UTOP/(ALOG(ZZWND/ZZ0))**2*2./UST &
                         *(1.-(XM+1)*X)/(1.-X)  
@@ -927,7 +930,8 @@
       REAL                    :: USTARM, ALPHAM
       REAL                    :: CONST1, OMEGA, OMEGAC 
       REAL                    :: UST, ZZ0,OMEGACC, CM
-      INTEGER, PARAMETER      :: JTOT=250
+      !INTEGER, PARAMETER      :: JTOT=250
+      INTEGER, PARAMETER      :: JTOT=50
       REAL, ALLOCATABLE       :: W(:)
       REAL                    :: ZX,ZARG,ZMU,ZLOG,ZZ00,ZBETA
       REAL                    :: Y,YC,DELY
@@ -942,7 +946,8 @@
 #endif
 !
       USTARM = 5.
-      ALPHAM = 20.*AALPHA
+      !ALPHAM = 20.*AALPHA
+      ALPHAM = 10.*AALPHA
       DELUST = USTARM/REAL(IUSTAR)
       DELALP = ALPHAM/REAL(IALPHA)
       CONST1 = BBETA/KAPPA**2
@@ -960,7 +965,7 @@
          DO K=0,IUSTAR
             UST      = MAX(REAL(K)*DELUST,0.000001)
             ZZ00       = UST**2*AALPHA/GRAV
-            IF (ZZ0MAX.NE.0) ZZ00=MIN(ZZ00,ZZ0MAX)
+            !IF (ZZ0MAX.NE.0) ZZ00=MIN(ZZ00,ZZ0MAX)
             ZZ0       = ZZ00*(1+FLOAT(L)*DELALP/AALPHA)
             OMEGACC  = MAX(OMEGAC,X0*GRAV/UST)
             YC       = OMEGACC*SQRT(ZZ0/GRAV)
@@ -980,7 +985,8 @@
                ZLOG     = MIN(ALOG(ZMU),0.)
                ZBETA        = CONST1*ZMU*ZLOG**4
                ! Power of Y in denominator should be FACHFE-4
-               TAUHFT(K,L)  = TAUHFT(K,L)+W(J)*ZBETA/Y*DELY
+               !TAUHFT(K,L)  = TAUHFT(K,L)+W(J)*ZBETA/Y*DELY
+               TAUHFT(K,L)  = TAUHFT(K,L)+ZBETA/Y*DELY
                END DO
                !IF (MOD(K,5).EQ.0.AND.MOD(L,5).EQ.0) &
                !WRITE(102,'(2I4,3G16.8)') L,K,UST,AALPHA+FLOAT(L)*DELALP,TAUHFT(K,L)
@@ -1081,7 +1087,7 @@
       DELI2   = 1. - DELI1
       XJ      = WINDSPEED/DELU
       J       = MIN ( JUMAX-1, INT(XJ) )
-      DELJ1   = MIN(1.,XJ - REAL(J))
+      DELJ1   = MIN(1.,XJ - REAL(J))    !AIMIE alreydy corrected
       DELJ2   = 1. - DELJ1
       USTAR=(TAUT(IND,J)*DELI2+TAUT(IND+1,J  )*DELI1)*DELJ2 &
        + (TAUT(IND,J+1)*DELI2+TAUT(IND+1,J+1)*DELI1)*DELJ1
