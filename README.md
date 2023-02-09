@@ -1,4 +1,3 @@
-###### FC
 # The WAVEWATCH III Framework
 
 WAVEWATCH III<sup>&reg;</sup>  is a community wave modeling framework that includes the 

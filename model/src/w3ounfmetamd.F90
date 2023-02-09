@@ -4027,7 +4027,7 @@
       META(1)%VMIN = 0
       META(1)%VMAX = 320
 !
-! ------ Group 10 (User defined) -------
+! ------ Group 10 -------
 !
 ! IFI=10, IFJ=1
       META => GROUP(10)%FIELD(1)%META
@@ -4040,6 +4040,20 @@
       WRITE (META(1)%VARNL,'(A12,I2.2)') 'Drag coeff'
       WRITE (META(1)%VARNS,'(A12,I2.2)') 'Drag coeff'
       WRITE (META(1)%VARNG,'(A12,I2.2)') 'Drag coeff'
+!
+! ------ Group 11 (User defined) -------
+!
+! IFI=10, IFJ=1
+      META => GROUP(11)%FIELD(1)%META
+      META(1)%FSC    = 0.1
+      META(1)%UNITS  = 'm'
+      META(1)%VMIN = 0
+      META(1)%VMAX = 0
+      WRITE (META(1)%ENAME,'(A2,I2.2)') '.u'
+      WRITE (META(1)%VARNM,'(A1,I2.2)') 'u'
+      WRITE (META(1)%VARNL,'(A12,I2.2)') 'User_defined'
+      WRITE (META(1)%VARNS,'(A12,I2.2)') 'User_defined'
+      WRITE (META(1)%VARNG,'(A12,I2.2)') 'user_defined
 !
       END SUBROUTINE DEFAULT_META
 !/ ------------------------------------------------------------------- /
