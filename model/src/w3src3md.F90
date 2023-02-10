@@ -539,8 +539,6 @@
         TAUWNX =STRESSSTABN(3,1)
         TAUWNY =STRESSSTABN(3,2)
 !             WRITE(995,'(A,11G14.5)') 'NEGSTRESS:    ',TAUWNX,TAUWNY,FW*UORB**3
-#ifdef W3_STAB3
-#endif
       S = D * A
 !
 ! ... Test output of arrays
