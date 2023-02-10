@@ -1139,6 +1139,13 @@
             ID_NB_SND = ID_NB_SND +1
             SND(ID_NB_SND)%CL_FIELD_NAME='WW3_OCHA'
 #endif
+!
+#ifdef W3_OASOCM
+         CASE('OCDN')
+           ! Drag Coefficient (-)
+           ID_NB_SND = ID_NB_SND +1
+           SND(ID_NB_SND)%CL_FIELD_NAME='WW3_OCDN'
+#endif
 
 !
 ! ATMOSPHERE MODEL VARIABLES

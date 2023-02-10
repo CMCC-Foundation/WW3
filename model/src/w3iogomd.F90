@@ -1071,12 +1071,17 @@
 !
 ! Group 10
 !
+#ifdef W3_OASACM
+      CASE('OCDN')
+        I = 10
+        J = 1
+#endif
       CASE('U1')
         I = 10
         J = 1
       CASE('U2')
         I = 10
-        J = 1
+        J = 2
 ! Not found:
 #ifdef W3_COU
       CASE('DRY')
@@ -1206,7 +1211,7 @@
                           SYY, SXY, PHS, PTP, PLP, PDIR, PSI, PWS,    &
                           PWST, PNR, USERO, TUSX, TUSY, PRMS, TPMS,   &
                           USSX, USSY, MSSX, MSSY, MSSD, MSCX, MSCY,   &
-                          MSCD, CHARN,                                &
+                          MSCD, CHARN, CD,                            &
                           BHD, CGE, P2SMS, US3D, EF, TH1M, STH1M,     &
                           TH2M, STH2M, HSIG, STMAXE, STMAXD,          &
                           HCMAXE, HMAXE, HCMAXD, HMAXD, USSP, QP, PQP,&
@@ -2152,6 +2157,8 @@
 #endif
 !
 !  Add here USERO(JSEA,1) ...
+            USERO(JSEA,1) = CD(JSEA)
+            USERO(JSEA,2) = 0.
 !
           END IF
         END DO
@@ -2759,7 +2766,7 @@
                           PEP, USERO, TAUOX, TAUOY, TAUWIX, TAUWIY,    &
                           PHIAW, PHIOC, TUSX, TUSY, PRMS, TPMS,        &
                           USSX, USSY, MSSX, MSSY, MSSD, MSCX, MSCY,    &
-                          MSCD, QP, TAUWNX, TAUWNY, CHARN, TWS, BHD,   &
+                          MSCD, QP, TAUWNX, TAUWNY, CHARN, CD, TWS, BHD,&
                           PHIBBL, TAUBBL, WHITECAP, BEDFORMS, CGE, EF, &
                           CFLXYMAX, CFLTHMAX, CFLKMAX, P2SMS, US3D,    &
                           TH1M, STH1M, TH2M, STH2M, HSIG, PHICE, TAUICE,&

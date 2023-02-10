@@ -69,7 +69,7 @@
 !mdo  *** Changing nu_water to be consistent with DWAT=1000 (assumes 10degC)
       REAL, PARAMETER         :: nu_water  = 1.31E-6    !mdo   WAS: 3.E-6        
       REAL, PARAMETER         :: sed_sg  = 2.65        
-      REAL, PARAMETER         :: KAPPA = 0.40       !Von Karman's constant
+      REAL, PARAMETER         :: KAPPA = 0.41       ! Von Karman's constant following WAM
 !
       REAL, PARAMETER         :: PI     = 3.141592653589793
       REAL, PARAMETER         :: TPI    = 2.0 * PI
